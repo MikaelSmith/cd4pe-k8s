@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:9.6
+    hostname: postgres
+    environment:
+      - POSTGRES_PASSWORD=cd4pe
+      - POSTGRES_USER=cd4pe
+    healthcheck:
+      test: [ 'CMD-SHELL', "psql --username=cd4pe cd4pe -c ''" ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 2m
+    volumes:
+      - cd4pe-postgres:/var/lib/postgresql/data
+      - ./postgres-custom:/docker-entrypoint-initdb.d
+
+  cd4pe:
+    hostname: cd4pe
+    image: puppet/continuous-delivery-for-puppet-enterprise:${CD4PE_VERSION:-3.x}
+    depends_on:
+      - postgres
+    ports:
+      - 8080:8080
+    environment:
+      - DB_ENDPOINT=postgres://postgres:5432/cd4pe
+      - DB_USER=cd4pe
+      - DB_PASS=cd4pe
+      - PFI_SECRET_KEY=${CD4PE_PFI_SECRET_KEY:-}
+    volumes:
+      - cd4pe-data:/disk
+
+volumes:
+  cd4pe-postgres:
+  cd4pe-data:

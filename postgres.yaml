@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: cd4pe-postgres
+  name: cd4pe-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: cd4pe-postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        io.kompose.service: cd4pe-postgres
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_PASSWORD
+          value: cd4pe
+        - name: POSTGRES_USER
+          value: cd4pe
+        image: postgres:9.6
+        livenessProbe:
+          exec:
+            command:
+            - psql --username=cd4pe cd4pe -c ''
+          failureThreshold: 6
+          initialDelaySeconds: 120
+          periodSeconds: 10
+          timeoutSeconds: 5
+        name: postgres
+        ports:
+        - name: postgres
+          containerPort: 5432
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: cd4pe-postgres
+      hostname: postgres
+      restartPolicy: Always
+      volumes:
+      - name: cd4pe-postgres
+        persistentVolumeClaim:
+          claimName: cd4pe-postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: cd4pe-postgres
+  name: postgres
+spec:
+  ports:
+  - port: 5432
+    targetPort: postgres
+  selector:
+    io.kompose.service: cd4pe-postgres
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    io.kompose.service: cd4pe-postgres
+  name: cd4pe-postgres
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi

@@ -1,0 +1,83 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: cd4pe
+  name: cd4pe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: cd4pe
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        io.kompose.service: cd4pe
+    spec:
+      containers:
+      - env:
+        - name: DB_ENDPOINT
+          value: postgres://postgres:5432/cd4pe
+        - name: DB_PASS
+          value: cd4pe
+        - name: DB_USER
+          value: cd4pe
+        - name: PFI_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: cd4pe-pfi
+              key: pfiSecretKey
+        image: puppet/continuous-delivery-for-puppet-enterprise:3.x
+        name: cd4pe
+        ports:
+        - name: cd4pe-port
+          containerPort: 8080
+        volumeMounts:
+        - mountPath: /disk
+          name: cd4pe-data
+      hostname: cd4pe
+      restartPolicy: Always
+      volumes:
+      - name: cd4pe-data
+        persistentVolumeClaim:
+          claimName: cd4pe-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: cd4pe
+  name: cd4pe-service
+spec:
+  ports:
+  - name: cd4pe-port
+    port: 8080
+    targetPort: cd4pe-port
+  type: LoadBalancer
+  selector:
+    io.kompose.service: cd4pe
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    io.kompose.service: cd4pe
+  name: cd4pe-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cd4pe-pfi
+type: Opaque
+stringData:
+  # todo: templatize and generate in Helm chart
+  pfiSecretKey: Z5JKcmWKguCisy1nPzEyiQ==
