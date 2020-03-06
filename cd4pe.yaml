@@ -79,5 +79,6 @@ metadata:
   name: cd4pe-pfi
 type: Opaque
 stringData:
-  # todo: templatize and generate in Helm chart
-  pfiSecretKey: Z5JKcmWKguCisy1nPzEyiQ==
+  # Uses Sprig functions to generate a (mostly) random 16-byte key
+  # Ref: https://kots.io/reference/template-functions/contexts/
+  pfiSecretKey: '{{repl randAscii 16 | b64enc}}'
