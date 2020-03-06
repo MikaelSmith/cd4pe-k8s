@@ -23,14 +23,6 @@ spec:
         - name: POSTGRES_USER
           value: cd4pe
         image: postgres:9.6
-        livenessProbe:
-          exec:
-            command:
-            - psql --username=cd4pe cd4pe -c ''
-          failureThreshold: 6
-          initialDelaySeconds: 120
-          periodSeconds: 10
-          timeoutSeconds: 5
         name: postgres
         ports:
         - name: postgres
