@@ -3,4 +3,15 @@ kind: Config
 metadata:
   name: cd4pe-config
 spec:
-  groups: []
+  groups:
+  - name: encryption_setup
+    title: Database Encryption
+    description: Secrets for configuring database encryption
+    items:
+    - name: pfi_secret_key
+      title: PFI Secret Key
+      help_text: A base64-encoded 16-byte key; can be generated with 'dd bs=1 if=/dev/urandom count=16 2>/dev/null | base64'
+      type: password
+      required: true
+       # Uses Sprig functions to generate a (mostly) random 16-byte key
+      value: '{{repl randAscii 16 | b64enc}}'

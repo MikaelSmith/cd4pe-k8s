@@ -85,6 +85,5 @@ metadata:
   name: cd4pe-pfi
 type: Opaque
 stringData:
-  # Uses Sprig functions to generate a (mostly) random 16-byte key
-  # Ref: https://kots.io/reference/template-functions/contexts/
-  pfiSecretKey: 'Z5JKcmWKguCisy1nPzEyiQ=='
+  # Gets the secret key from Replicated config.
+  pfiSecretKey: '{{repl ConfigOption "pfi_secret_key"}}'
