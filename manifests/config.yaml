@@ -1,0 +1,6 @@
+apiVersion: kots.io/v1beta1
+kind: Config
+metadata:
+  name: cd4pe-config
+spec:
+  groups: []

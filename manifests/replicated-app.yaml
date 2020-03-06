@@ -1,0 +1,16 @@
+apiVersion: kots.io/v1beta1
+kind: Application
+metadata:
+  name: cd4pe
+spec:
+  title: CD4PE
+  icon: https://github.com/cncf/artwork/blob/master/projects/kubernetes/icon/color/kubernetes-icon-color.png
+  statusInformers:
+    - deployment/cd4pe
+  releaseNotes: |
+    release notes
+  ports:
+    - serviceName: cd4pe
+      servicePort: 8080
+      localPort: 8080
+      applicationUrl: "https://example-cd4pe"

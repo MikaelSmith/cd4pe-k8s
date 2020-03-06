@@ -3,19 +3,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    io.kompose.service: cd4pe
+    app.kubernetes.io/name: cd4pe
   name: cd4pe
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: cd4pe
+      app.kubernetes.io/name: cd4pe
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        io.kompose.service: cd4pe
+        app.kubernetes.io/name: cd4pe
     spec:
       containers:
       - env:
@@ -35,6 +34,13 @@ spec:
         ports:
         - name: cd4pe-port
           containerPort: 8080
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "2048Mi"
+            cpu: "2"
         volumeMounts:
         - mountPath: /disk
           name: cd4pe-data
@@ -49,8 +55,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    io.kompose.service: cd4pe
-  name: cd4pe-service
+    app.kubernetes.io/name: cd4pe
+  name: cd4pe
 spec:
   ports:
   - name: cd4pe-port
@@ -58,13 +64,13 @@ spec:
     targetPort: cd4pe-port
   type: LoadBalancer
   selector:
-    io.kompose.service: cd4pe
+    app.kubernetes.io/name: cd4pe
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    io.kompose.service: cd4pe
+    app.kubernetes.io/name: cd4pe
   name: cd4pe-data
 spec:
   accessModes:
@@ -81,4 +87,4 @@ type: Opaque
 stringData:
   # Uses Sprig functions to generate a (mostly) random 16-byte key
   # Ref: https://kots.io/reference/template-functions/contexts/
-  pfiSecretKey: '{{repl randAscii 16 | b64enc}}'
+  pfiSecretKey: 'Z5JKcmWKguCisy1nPzEyiQ=='

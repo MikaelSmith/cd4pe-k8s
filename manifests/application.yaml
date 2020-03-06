@@ -1,0 +1,11 @@
+apiVersion: app.k8s.io/v1beta1
+kind: Application
+metadata:
+  name: cd4pe
+  labels:
+    app.kubernetes.io/name: cd4pe
+spec:
+  descriptor:
+    links:
+      - description: 'CD4PE'
+        url: "http://example-cd4pe"
