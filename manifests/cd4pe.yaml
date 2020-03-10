@@ -9,8 +9,6 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: cd4pe
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:

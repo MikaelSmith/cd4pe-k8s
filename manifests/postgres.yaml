@@ -1,6 +1,6 @@
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/name: cd4pe-postgres
@@ -9,8 +9,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: cd4pe-postgres
-  strategy:
-    type: Recreate
+  serviceName: postgres
   template:
     metadata:
       labels:
@@ -54,6 +53,7 @@ spec:
   ports:
   - port: 5432
     targetPort: postgres
+  clusterIP: None
   selector:
     app.kubernetes.io/name: cd4pe-postgres
 ---
