@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: cd4pe
   name: cd4pe
-  namespace: '{{repl ConfigOption "namespace"}}'
+  namespace: '{{repl or (ConfigOption "namespace") "default"}}'
 spec:
   selector:
     matchLabels:
@@ -57,7 +57,7 @@ metadata:
   labels:
     app.kubernetes.io/name: cd4pe
   name: cd4pe
-  namespace: '{{repl ConfigOption "namespace"}}'
+  namespace: '{{repl or (ConfigOption "namespace") "default"}}'
 spec:
   ports:
   - name: cd4pe-port
@@ -72,7 +72,7 @@ metadata:
   labels:
     app.kubernetes.io/name: cd4pe
   name: cd4pe-data
-  namespace: '{{repl ConfigOption "namespace"}}'
+  namespace: '{{repl or (ConfigOption "namespace") "default"}}'
 spec:
   accessModes:
   - ReadWriteOnce
@@ -84,7 +84,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: cd4pe-pfi
-  namespace: '{{repl ConfigOption "namespace"}}'
+  namespace: '{{repl or (ConfigOption "namespace") "default"}}'
 type: Opaque
 stringData:
   # Gets the secret key from Replicated config.
@@ -94,6 +94,7 @@ apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: cd4pe
+  namespace: '{{repl or (ConfigOption "namespace") "default"}}'
   annotations:
     kots.io/exclude: '{{repl or (ConfigOptionEquals "enable_ingress" "1" | not) IsKurl }}'
     kubernetes.io/ingress.allow-http: '{{repl ConfigOptionEquals "allow_http" "1" | not }}'
@@ -112,7 +113,8 @@ spec:
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: cd4e
+  name: cd4pe
+  namespace: '{{repl or (ConfigOption "namespace") "default"}}'
   annotations:
     kots.io/exclude: '{{repl or (ConfigOptionEquals "enable_ingress" "1" | not) (not IsKurl) }}'
     kubernetes.io/ingress.allow-http: '{{repl ConfigOptionEquals "allow_http" "1" | not }}'

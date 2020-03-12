@@ -23,7 +23,7 @@ spec:
     - name: namespace
       title: Kubernetes Namespace
       description: |
-        The namespace to deploy in.
+        The namespace to deploy in. This namespace needs to exist before deploying the application.
       type: text
       value: cd4pe
     - name: enable_ingress
