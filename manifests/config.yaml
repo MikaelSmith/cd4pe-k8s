@@ -9,61 +9,48 @@ spec:
     items:
     - name: pfi_secret_key
       title: PFI Secret Key
-      description: |
+      help_text: |
         A 16-byte secret key used for AES encryption of secrets (such as PE access tokens) supplied to Continuous Delivery for PE.
-
-        A default is provided, but it's only generated with 16 ASCII characters so it's not fully random.
-
-        If you're a *nix user, generate this key by running:
-        ```
-        dd bs=1 if=/dev/urandom count=16 2>/dev/null | base64
-        ```
-
-        If you're a Windows user, generate this key by running:
-        ```
-        $randomBytes = New-Object Byte[](16)
-        [Security.Cryptography.RNGCryptoServiceProvider]::Create().GetBytes($randomBytes) 
-        $encodedBytes = [System.Convert]::ToBase64String($randomBytes)
-        ```
+        The default is not cryptographically-generated. Generate a new key by running: `dd bs=1 if=/dev/urandom count=16 2>/dev/null | base64`.
       type: password
       required: true
        # Uses Sprig functions to generate a (mostly) random 16-byte key
       value: '{{repl randAscii 16 | b64enc}}'
     - name: namespace
       title: Kubernetes Namespace
-      description: |
-        The namespace to deploy in. This namespace needs to exist before deploying the application.
+      help_text: |
+        The namespace to deploy in. The namespace needs to exist before deploying to it.
       type: text
       value: cd4pe
   - name: ingress_setup
     title: Ingress Setup
     description: |
-      Setup how the application is exposed externally. This is not put in the application namespace because it will reuse TLS from the KOTS admin console if using an embedded cluster.
+      Setup how the application is exposed externally.
     items:
     - name: enable_ingress
       type: bool
       title: Enable Kubernetes Ingress
-      description: |
+      help_text: |
         Uncheck this box to disable the Kubernetes Ingress resource.
       default: "1"
     - name: hostname
       type: text
       title: Hostname
-      description: |
+      help_text: |
         Use this field to provide a hostname for your Example Application installation.
       required: true
       when: repl{{ ConfigOptionEquals "enable_ingress" "1" }}
     - name: allow_http
       type: bool
       title: Allow Unsecured Access through HTTP
-      description: |
+      help_text: |
         Uncheck this box to disable HTTP traffic between the client and the load balancer.
       default: "1"
       when: repl{{ ConfigOptionEquals "enable_ingress" "1" }}
     - name: annotations
       type: textarea
       title: Annotations
-      description: |
+      help_text: |
         Use this textarea to provide annotations specific to your ingress controller.
         For example, `kubernetes.io/ingress.class: alb` when using the ALB ingress controller.
       when: repl{{ ConfigOptionEquals "enable_ingress" "1" }}
