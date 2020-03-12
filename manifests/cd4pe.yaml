@@ -32,8 +32,12 @@ spec:
         image: puppet/continuous-delivery-for-puppet-enterprise:3.x
         name: cd4pe
         ports:
-        - name: cd4pe-port
+        - name: cd4pe-web
           containerPort: 8080
+        - name: cd4pe-backend
+          containerPort: 8000
+        - name: cd4pe-agent
+          containerPort: 7000
         resources:
           requests:
             memory: "256Mi"
@@ -60,9 +64,15 @@ metadata:
   namespace: '{{repl or (ConfigOption "namespace") Namespace}}'
 spec:
   ports:
-  - name: cd4pe-port
+  - name: cd4pe-web
     port: 8080
-    targetPort: cd4pe-port
+    targetPort: cd4pe-web
+  - name: cd4pe-backend
+    port: 8000
+    targetPort: cd4pe-backend
+  - name: cd4pe-port
+    port: 7000
+    targetPort: cd4pe-agent
   selector:
     app.kubernetes.io/name: cd4pe
 ---
