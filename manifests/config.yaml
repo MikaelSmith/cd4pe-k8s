@@ -15,3 +15,12 @@ spec:
       required: true
        # Uses Sprig functions to generate a (mostly) random 16-byte key
       value: '{{repl randAscii 16 | b64enc}}'
+  - name: environment_setup
+    title: Environment Setup
+    description: Setup where the application runs and how it's exposed to the internet
+    items:
+    - name: namespace
+      title: Kubernetes Namespace
+      help_text: The namespace to deploy in.
+      type: text
+      value: cd4pe

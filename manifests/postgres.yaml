@@ -5,6 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: cd4pe-postgres
   name: postgres
+  namespace: '{{repl ConfigOption "namespace"}}'
 spec:
   selector:
     matchLabels:
@@ -49,6 +50,7 @@ metadata:
   labels:
     app.kubernetes.io/name: cd4pe-postgres
   name: postgres
+  namespace: '{{repl ConfigOption "namespace"}}'
 spec:
   ports:
   - port: 5432
@@ -63,6 +65,7 @@ metadata:
   labels:
     app.kubernetes.io/name: cd4pe-postgres
   name: cd4pe-postgres
+  namespace: '{{repl ConfigOption "namespace"}}'
 spec:
   accessModes:
   - ReadWriteOnce
