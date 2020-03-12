@@ -6,7 +6,7 @@ docker stack deploy cd4pe --orchestrator kubernetes -c docker-compose.yml
 ```
 or
 ```
-kubectl apply -f postgres.yaml -f cd4pe.yaml
+kubectl apply -f manifests/postgres.yaml -f manifests/cd4pe.yaml
 ```
 
-TODO: remove hard-coded `PFI_SECRET_KEY`.
+> Note that manifests have been templated for deployment with kots.io and will need to have template substitution done before they can be applied.
