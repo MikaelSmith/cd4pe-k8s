@@ -10,7 +10,8 @@ spec:
     items:
     - name: pfi_secret_key
       title: PFI Secret Key
-      help_text: A base64-encoded 16-byte key; can be generated with 'dd bs=1 if=/dev/urandom count=16 2>/dev/null | base64'
+      description: |
+        A base64-encoded 16-byte key; can be generated with 'dd bs=1 if=/dev/urandom count=16 2>/dev/null | base64'
       type: password
       required: true
        # Uses Sprig functions to generate a (mostly) random 16-byte key
@@ -21,6 +22,34 @@ spec:
     items:
     - name: namespace
       title: Kubernetes Namespace
-      help_text: The namespace to deploy in.
+      description: |
+        The namespace to deploy in.
       type: text
       value: cd4pe
+    - name: enable_ingress
+      type: bool
+      title: Enable Kubernetes Ingress
+      description: |
+        Uncheck this box to disable the Kubernetes Ingress resource.
+      default: "1"
+    - name: hostname
+      type: text
+      title: Hostname
+      description: |
+        Use this field to provide a hostname for your Example Application installation.
+      required: true
+      when: repl{{ ConfigOptionEquals "enable_ingress" "1" }}
+    - name: allow_http
+      type: bool
+      title: Allow Unsecured Access through HTTP
+      description: |
+        Uncheck this box to disable HTTP traffic between the client and the load balancer.
+      default: "1"
+      when: repl{{ ConfigOptionEquals "enable_ingress" "1" }}
+    - name: annotations
+      type: textarea
+      title: Annotations
+      description: |
+        Use this textarea to provide annotations specific to your ingress controller.
+        For example, `kubernetes.io/ingress.class: alb` when using the ALB ingress controller.
+      when: repl{{ ConfigOptionEquals "enable_ingress" "1" }}
