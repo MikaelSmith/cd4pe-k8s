@@ -19,9 +19,23 @@ spec:
     - name: namespace
       title: Kubernetes Namespace
       help_text: |
-        The namespace to deploy in. The namespace needs to exist before deploying to it.
+        The namespace to deploy in. The namespace needs to exist before deploying to it. Set blank to deploy to the same namespace as the admin console.
       type: text
       value: cd4pe
+    - name: backend_port
+      title: CD4PE Backend Service Port
+      help_text: |
+        Port to bind for the backend service.
+      type: text
+      required: true
+      value: "8000"
+    - name: agent_port
+      title: CD4PE Agent Service Port
+      help_text: |
+        Port to bind for the agent service.
+      type: text
+      required: true
+      value: "7000"
   - name: ingress_setup
     title: Ingress Setup
     description: |

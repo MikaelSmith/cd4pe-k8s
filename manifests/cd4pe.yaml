@@ -67,14 +67,29 @@ spec:
   - name: cd4pe-web
     port: 8080
     targetPort: cd4pe-web
+  selector:
+    app.kubernetes.io/name: cd4pe
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: cd4pe
+  name: cd4pe-services
+  namespace: '{{repl or (ConfigOption "namespace") Namespace}}'
+spec:
+  ports:
   - name: cd4pe-backend
+    nodePort: repl{{ConfigOption "backend_port"}}
     port: 8000
     targetPort: cd4pe-backend
   - name: cd4pe-port
+    nodePort: repl{{ConfigOption "agent_port"}}
     port: 7000
     targetPort: cd4pe-agent
   selector:
     app.kubernetes.io/name: cd4pe
+  type: NodePort
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
