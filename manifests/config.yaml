@@ -4,28 +4,42 @@ metadata:
   name: cd4pe-config
 spec:
   groups:
-  - name: encryption_setup
-    title: Database Encryption
-    description: Secrets for configuring database encryption
+  - name: application_setup
+    title: Application Setup
     items:
     - name: pfi_secret_key
       title: PFI Secret Key
       description: |
-        A base64-encoded 16-byte key; can be generated with 'dd bs=1 if=/dev/urandom count=16 2>/dev/null | base64'
+        A 16-byte secret key used for AES encryption of secrets (such as PE access tokens) supplied to Continuous Delivery for PE.
+
+        A default is provided, but it's only generated with 16 ASCII characters so it's not fully random.
+
+        If you're a *nix user, generate this key by running:
+        ```
+        dd bs=1 if=/dev/urandom count=16 2>/dev/null | base64
+        ```
+
+        If you're a Windows user, generate this key by running:
+        ```
+        $randomBytes = New-Object Byte[](16)
+        [Security.Cryptography.RNGCryptoServiceProvider]::Create().GetBytes($randomBytes) 
+        $encodedBytes = [System.Convert]::ToBase64String($randomBytes)
+        ```
       type: password
       required: true
        # Uses Sprig functions to generate a (mostly) random 16-byte key
       value: '{{repl randAscii 16 | b64enc}}'
-  - name: environment_setup
-    title: Environment Setup
-    description: Setup where the application runs and how it's exposed to the internet
-    items:
     - name: namespace
       title: Kubernetes Namespace
       description: |
         The namespace to deploy in. This namespace needs to exist before deploying the application.
       type: text
       value: cd4pe
+  - name: ingress_setup
+    title: Ingress Setup
+    description: |
+      Setup how the application is exposed externally. This is not put in the application namespace because it will reuse TLS from the KOTS admin console if using an embedded cluster.
+    items:
     - name: enable_ingress
       type: bool
       title: Enable Kubernetes Ingress
