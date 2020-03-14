@@ -22,6 +22,12 @@ spec:
         The namespace to deploy in. The namespace needs to exist before deploying to it. Set blank to deploy to the same namespace as the admin console.
       type: text
       value: cd4pe
+    - name: ssl_port
+      title: CD4PE SSL WebUI Port
+      help_text: |
+        Port to bind when SSL is enabled in CD4PE settings.
+      type: text
+      value: "8443"
     - name: backend_port
       title: CD4PE Backend Service Port
       help_text: |

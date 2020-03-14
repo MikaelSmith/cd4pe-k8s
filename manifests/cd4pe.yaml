@@ -18,6 +18,8 @@ spec:
     spec:
       containers:
       - env:
+        - name: SSL_PORT
+          value: '{{repl ConfigOption "ssl_port"}}'
         - name: DB_ENDPOINT
           value: postgres://postgres:5432/cd4pe
         - name: DB_PASS
@@ -34,6 +36,8 @@ spec:
         ports:
         - name: cd4pe-web
           containerPort: 8080
+        - name: cd4pe-ssl
+          containerPort: 8443
         - name: cd4pe-backend
           containerPort: 8000
         - name: cd4pe-agent
@@ -89,6 +93,10 @@ metadata:
   namespace: '{{repl or (ConfigOption "namespace") Namespace}}'
 spec:
   ports:
+  - name: cd4pe-ssl
+    nodePort: repl{{ConfigOption "ssl_port"}}
+    port: 8443
+    targetPort: cd4pe-ssl
   - name: cd4pe-backend
     nodePort: repl{{ConfigOption "backend_port"}}
     port: 8000
