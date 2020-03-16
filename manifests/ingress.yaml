@@ -27,7 +27,7 @@ spec:
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: cd4pe
+  name: cd4pe-repl{{ConfigOption "namespace"}}
   namespace: '{{repl Namespace}}'
   annotations:
     kots.io/exclude: '{{repl or (ConfigOptionEquals "enable_ingress" "1" | not) (not IsKurl) }}'
@@ -45,7 +45,7 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: repl{{(eq Namespace (or (ConfigOption "namespace") Namespace)) | ternary "cd4pe" "cd4pe-public"}}
+          serviceName: repl{{(eq Namespace (or (ConfigOption "namespace") Namespace)) | ternary "cd4pe" (print "cd4pe-" (ConfigOption "namespace"))}}
           servicePort: 8080
 ---
 apiVersion: v1
@@ -53,7 +53,7 @@ kind: Service
 metadata:
   annotations:
     kots.io/exclude: '{{repl or (ConfigOptionEquals "enable_ingress" "1" | not) (not IsKurl) (eq Namespace (or (ConfigOption "namespace") Namespace)) }}'
-  name: cd4pe-public
+  name: cd4pe-repl{{ConfigOption "namespace"}}
   namespace: '{{repl Namespace}}'
 spec:
   type: ExternalName
