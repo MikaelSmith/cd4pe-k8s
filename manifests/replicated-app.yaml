@@ -6,11 +6,10 @@ spec:
   title: CD4PE
   icon: https://github.com/cncf/artwork/blob/master/projects/kubernetes/icon/color/kubernetes-icon-color.png
   statusInformers:
-  - deployment/cd4pe
+  - cd4pe/statefulset/cd4pe
   releaseNotes: |
     release notes
   ports:
   - serviceName: cd4pe
     servicePort: 8080
-    localPort: 80
     applicationUrl: https://cd4pe.example.com
