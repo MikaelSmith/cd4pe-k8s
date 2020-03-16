@@ -36,17 +36,17 @@ metadata:
     kots.io/placeholder: repl{{ printf "'true'" }}repl{{ ConfigOption "annotations" | nindent 4 }}
 spec:
   tls:
-    - hosts:
-        - repl{{ ConfigOption "hostname" }}
-      secretName: kotsadm-tls
+  - hosts:
+      - repl{{ ConfigOption "hostname" }}
+    secretName: kotsadm-tls
   rules:
-    - host: repl{{ ConfigOption "hostname" }}
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: repl{{(eq Namespace (or (ConfigOption "namespace") Namespace)) | ternary "cd4pe" "cd4pe-public"}}
-              servicePort: 8080
+  - host: repl{{ ConfigOption "hostname" }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: repl{{(eq Namespace (or (ConfigOption "namespace") Namespace)) | ternary "cd4pe" "cd4pe-public"}}
+          servicePort: 8080
 ---
 apiVersion: v1
 kind: Service

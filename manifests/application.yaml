@@ -7,5 +7,5 @@ metadata:
 spec:
   descriptor:
     links:
-      - description: CD4PE
-        url: https://cd4pe.example.com
+    - description: CD4PE
+      url: https://cd4pe.example.com
