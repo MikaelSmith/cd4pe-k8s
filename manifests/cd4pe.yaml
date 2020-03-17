@@ -58,16 +58,20 @@ spec:
       - name: cd4pe-data
         persistentVolumeClaim:
           claimName: cd4pe-data
-  volumeClaimTemplates:
-  - metadata:
-      name: cd4pe-data
-      namespace: '{{repl or (ConfigOption "namespace") Namespace}}'
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 100Mi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app.kubernetes.io/name: cd4pe
+  name: cd4pe-data
+  namespace: '{{repl or (ConfigOption "namespace") Namespace}}'
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi
 ---
 apiVersion: v1
 kind: Service
