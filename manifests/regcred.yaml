@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  annotations:
+    kots.io/exclude: '{{repl or (eq Namespace (or (ConfigOption "namespace") Namespace)) (not HasLocalRegistry) }}'
+  name: local-registry-pull-secret
+  namespace: '{{repl or (ConfigOption "namespace") Namespace }}'
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: '{{repl LocalRegistryImagePullSecret }}'
