@@ -18,8 +18,6 @@ spec:
     spec:
       containers:
       - env:
-        - name: SSL_PORT
-          value: '{{repl ConfigOption "ssl_port"}}'
         - name: DB_ENDPOINT
           value: postgres://postgres:5432/cd4pe
         - name: DB_PASS
@@ -36,12 +34,8 @@ spec:
         ports:
         - name: cd4pe-web
           containerPort: 8080
-        - name: cd4pe-ssl
-          containerPort: 8443
         - name: cd4pe-backend
           containerPort: 8000
-        - name: cd4pe-agent
-          containerPort: 7000
         resources:
           requests:
             memory: "256Mi"
@@ -85,33 +79,11 @@ spec:
   - name: cd4pe-web
     port: 8080
     targetPort: cd4pe-web
-  selector:
-    app.kubernetes.io/name: cd4pe
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/name: cd4pe
-  name: cd4pe-services
-  namespace: '{{repl or (ConfigOption "namespace") Namespace}}'
-spec:
-  ports:
-  - name: cd4pe-ssl
-    nodePort: repl{{ConfigOption "ssl_port"}}
-    port: 8443
-    targetPort: cd4pe-ssl
   - name: cd4pe-backend
-    nodePort: repl{{ConfigOption "backend_port"}}
     port: 8000
     targetPort: cd4pe-backend
-  - name: cd4pe-port
-    nodePort: repl{{ConfigOption "agent_port"}}
-    port: 7000
-    targetPort: cd4pe-agent
   selector:
     app.kubernetes.io/name: cd4pe
-  type: NodePort
 ---
 apiVersion: v1
 kind: Secret

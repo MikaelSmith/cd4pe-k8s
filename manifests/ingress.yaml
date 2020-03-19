@@ -19,6 +19,13 @@ spec:
             backend:
               serviceName: cd4pe
               servicePort: 8080
+    - host: cd4pe.repl{{ or (ConfigOption "hostname") "~" }}
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: cd4pe
+              servicePort: 8000
 ---
 # Embedded cluster. With KURL, the ingress uses a secret from the admin console namespace for TLS.
 # If the application is in a different namespace, follow
@@ -47,6 +54,13 @@ spec:
         backend:
           serviceName: repl{{(eq Namespace (or (ConfigOption "namespace") Namespace)) | ternary "cd4pe" (print "cd4pe-" (ConfigOption "namespace"))}}
           servicePort: 8080
+  - host: cd4pe.repl{{ or (ConfigOption "hostname") "~" }}
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: repl{{(eq Namespace (or (ConfigOption "namespace") Namespace)) | ternary "cd4pe" (print "cd4pe-" (ConfigOption "namespace"))}}
+            servicePort: 8000
 ---
 apiVersion: v1
 kind: Service
@@ -59,4 +73,7 @@ spec:
   type: ExternalName
   externalName: cd4pe.repl{{or (ConfigOption "namespace") Namespace}}.svc.cluster.local
   ports:
-  - port: 8080
+  - name: webui
+    port: 8080
+  - name: backend
+    port: 8000
