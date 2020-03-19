@@ -3,7 +3,7 @@ kind: Secret
 metadata:
   annotations:
     kots.io/exclude: '{{repl or (eq Namespace (or (ConfigOption "namespace") Namespace)) (not HasLocalRegistry) }}'
-  name: local-registry-pull-secret
+  name: kotsadm-replicated-registry
   namespace: '{{repl or (ConfigOption "namespace") Namespace }}'
 type: kubernetes.io/dockerconfigjson
 data:
