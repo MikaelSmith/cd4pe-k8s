@@ -1,0 +1,17 @@
+cd4pe:
+  registry: ''
+  repository: 'puppet/continuous-delivery-for-puppet-enterprise'
+  tag: '3.4.0'
+
+postgres:
+  registry: ''
+  repository: 'postgres'
+  tag: '9.6'
+
+# A random base64-encoded 16-byte key.
+# Can be generated with `dd bs=1 if=/dev/urandom count=16 2>/dev/null | base64`.
+#pfiSecretKey: 'abcdefghijklmnopqrstuvwx'
+
+# Used to configure how CD4PE ports are exposed. No ingress is included.
+# If you do not have a load balancer available, use NodePort.
+serviceType: LoadBalancer

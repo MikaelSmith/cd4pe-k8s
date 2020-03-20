@@ -1,0 +1,139 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels: &labels
+    # TODO: make the label contents a template helper
+    app.kubernetes.io/name: cd4pe
+    # The "app.kubernetes.io/managed-by" label is used to track which tool
+    # deployed a given chart. It is useful for admins who want to see what
+    # releases a particular tool is responsible for.
+    app.kubernetes.io/managed-by: {{.Release.Service | quote }}
+    # The "app.kubernetes.io/instance" convention makes it easy to tie a release
+    # to all of the Kubernetes resources that were created as part of that
+    # release.
+    app.kubernetes.io/instance: {{.Release.Name | quote }}
+    app.kubernetes.io/version: {{.Chart.AppVersion}}
+    # This makes it easy to audit chart usage.
+    helm.sh/chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+  name: cd4pe
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cd4pe
+  serviceName: cd4pe
+  template:
+    metadata:
+      labels: *labels
+    spec:
+      containers:
+      - env:
+        - name: DB_ENDPOINT
+          value: postgres://postgres:5432/cd4pe
+        - name: DB_PASS
+          value: cd4pe
+        - name: DB_USER
+          value: cd4pe
+        - name: PFI_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: cd4pe-pfi
+              key: pfiSecretKey
+        image: "{{ .Values.cd4pe.registry }}{{ .Values.cd4pe.repository }}:{{ .Values.cd4pe.tag }}"
+        name: cd4pe
+        ports:
+        - name: cd4pe-web
+          containerPort: 8080
+        - name: cd4pe-backend
+          containerPort: 8000
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "2048Mi"
+            cpu: "2"
+        volumeMounts:
+        - mountPath: /disk
+          name: cd4pe-data
+      hostname: cd4pe
+      restartPolicy: Always
+      volumes:
+      - name: cd4pe-data
+        persistentVolumeClaim:
+          claimName: cd4pe-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app.kubernetes.io/name: cd4pe
+    # The "app.kubernetes.io/managed-by" label is used to track which tool
+    # deployed a given chart. It is useful for admins who want to see what
+    # releases a particular tool is responsible for.
+    app.kubernetes.io/managed-by: {{.Release.Service | quote }}
+    # The "app.kubernetes.io/instance" convention makes it easy to tie a release
+    # to all of the Kubernetes resources that were created as part of that
+    # release.
+    app.kubernetes.io/instance: {{.Release.Name | quote }}
+    app.kubernetes.io/version: {{.Chart.AppVersion}}
+    # This makes it easy to audit chart usage.
+    helm.sh/chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+  name: cd4pe-data
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: cd4pe
+    # The "app.kubernetes.io/managed-by" label is used to track which tool
+    # deployed a given chart. It is useful for admins who want to see what
+    # releases a particular tool is responsible for.
+    app.kubernetes.io/managed-by: {{.Release.Service | quote }}
+    # The "app.kubernetes.io/instance" convention makes it easy to tie a release
+    # to all of the Kubernetes resources that were created as part of that
+    # release.
+    app.kubernetes.io/instance: {{.Release.Name | quote }}
+    app.kubernetes.io/version: {{.Chart.AppVersion}}
+    # This makes it easy to audit chart usage.
+    helm.sh/chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+  name: cd4pe
+spec:
+  ports:
+  - name: cd4pe-web
+    port: 8080
+    targetPort: cd4pe-web
+  - name: cd4pe-backend
+    port: 8000
+    targetPort: cd4pe-backend
+  selector:
+    app.kubernetes.io/name: cd4pe
+  type: "{{.Values.serviceType}}"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/name: cd4pe
+    # The "app.kubernetes.io/managed-by" label is used to track which tool
+    # deployed a given chart. It is useful for admins who want to see what
+    # releases a particular tool is responsible for.
+    app.kubernetes.io/managed-by: {{.Release.Service | quote }}
+    # The "app.kubernetes.io/instance" convention makes it easy to tie a release
+    # to all of the Kubernetes resources that were created as part of that
+    # release.
+    app.kubernetes.io/instance: {{.Release.Name | quote }}
+    app.kubernetes.io/version: {{.Chart.AppVersion}}
+    # This makes it easy to audit chart usage.
+    helm.sh/chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+  name: cd4pe-pfi
+type: Opaque
+stringData:
+  # Gets the secret key from Replicated config.
+  pfiSecretKey: "{{.Values.pfiSecretKey}}"

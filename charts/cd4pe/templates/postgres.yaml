@@ -1,0 +1,103 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels: &labels
+    app.kubernetes.io/name: cd4pe-postgres
+    # The "app.kubernetes.io/managed-by" label is used to track which tool
+    # deployed a given chart. It is useful for admins who want to see what
+    # releases a particular tool is responsible for.
+    app.kubernetes.io/managed-by: {{.Release.Service | quote }}
+    # The "app.kubernetes.io/instance" convention makes it easy to tie a release
+    # to all of the Kubernetes resources that were created as part of that
+    # release.
+    app.kubernetes.io/instance: {{.Release.Name | quote }}
+    app.kubernetes.io/version: {{.Chart.AppVersion}}
+    # This makes it easy to audit chart usage.
+    helm.sh/chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+  name: postgres
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cd4pe-postgres
+  serviceName: postgres
+  template:
+    metadata:
+      labels: *labels
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_PASSWORD
+          value: cd4pe
+        - name: POSTGRES_USER
+          value: cd4pe
+        image: "{{ .Values.postgres.registry }}{{ .Values.postgres.repository }}:{{ .Values.postgres.tag }}"
+        name: postgres
+        ports:
+        - name: postgres
+          containerPort: 5432
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "2048Mi"
+            cpu: "4"
+        volumeMounts:
+        - mountPath: /var/lib/postgresql
+          name: cd4pe-postgres
+      hostname: postgres
+      restartPolicy: Always
+      volumes:
+      - name: cd4pe-postgres
+        persistentVolumeClaim:
+          claimName: cd4pe-postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: cd4pe-postgres
+    # The "app.kubernetes.io/managed-by" label is used to track which tool
+    # deployed a given chart. It is useful for admins who want to see what
+    # releases a particular tool is responsible for.
+    app.kubernetes.io/managed-by: {{.Release.Service | quote }}
+    # The "app.kubernetes.io/instance" convention makes it easy to tie a release
+    # to all of the Kubernetes resources that were created as part of that
+    # release.
+    app.kubernetes.io/instance: {{.Release.Name | quote }}
+    app.kubernetes.io/version: {{.Chart.AppVersion}}
+    # This makes it easy to audit chart usage.
+    helm.sh/chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+  name: postgres
+spec:
+  ports:
+  - port: 5432
+    targetPort: postgres
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: cd4pe-postgres
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app.kubernetes.io/name: cd4pe-postgres
+    # The "app.kubernetes.io/managed-by" label is used to track which tool
+    # deployed a given chart. It is useful for admins who want to see what
+    # releases a particular tool is responsible for.
+    app.kubernetes.io/managed-by: {{.Release.Service | quote }}
+    # The "app.kubernetes.io/instance" convention makes it easy to tie a release
+    # to all of the Kubernetes resources that were created as part of that
+    # release.
+    app.kubernetes.io/instance: {{.Release.Name | quote }}
+    app.kubernetes.io/version: {{.Chart.AppVersion}}
+    # This makes it easy to audit chart usage.
+    helm.sh/chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+  name: cd4pe-postgres
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
