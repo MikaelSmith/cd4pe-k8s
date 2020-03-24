@@ -6,7 +6,7 @@ spec:
   title: CD4PE
   icon: https://github.com/cncf/artwork/blob/master/projects/kubernetes/icon/color/kubernetes-icon-color.png
   statusInformers:
-  - cd4pe/statefulset/cd4pe
+  - cd4pe/deployment/cd4pe
   releaseNotes: |
     release notes
   ports:

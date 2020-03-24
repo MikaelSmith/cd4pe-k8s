@@ -1,6 +1,6 @@
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: cd4pe
@@ -10,7 +10,6 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: cd4pe
-  serviceName: cd4pe
   template:
     metadata:
       labels:
@@ -43,29 +42,8 @@ spec:
           limits:
             memory: "2048Mi"
             cpu: "2"
-        volumeMounts:
-        - mountPath: /disk
-          name: cd4pe-data
       hostname: cd4pe
       restartPolicy: Always
-      volumes:
-      - name: cd4pe-data
-        persistentVolumeClaim:
-          claimName: cd4pe-data
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  labels:
-    app.kubernetes.io/name: cd4pe
-  name: cd4pe-data
-  namespace: '{{repl or (ConfigOption "namespace") Namespace}}'
-spec:
-  accessModes:
-  - ReadWriteMany
-  resources:
-    requests:
-      storage: 100Mi
 ---
 apiVersion: v1
 kind: Service
