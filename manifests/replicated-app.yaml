@@ -4,7 +4,7 @@ metadata:
   name: cd4pe
 spec:
   title: CD4PE
-  icon: https://github.com/cncf/artwork/blob/master/projects/kubernetes/icon/color/kubernetes-icon-color.png
+  icon: https://symbols.getvecta.com/stencil_92/64_puppet-icon.aba923d681.png
   statusInformers:
   - cd4pe/statefulset/cd4pe
   releaseNotes: |
