@@ -5,6 +5,7 @@ metadata:
 spec:
   analyzers:
   - clusterVersion:
+      checkName: Must have a recent version of Kubernetes
       outcomes:
       - fail:
           when: "< 1.13.0"
@@ -16,3 +17,75 @@ spec:
           uri: https://kubernetes.io
       - pass:
           message: Your cluster meets the recommended and required versions of Kubernetes.
+  - nodeResources:
+      checkName: Must have at least 3 nodes in the cluster
+      outcomes:
+      - fail:
+          when: "count() < 3"
+          message: This application requires at least 3 nodes.
+      - warn:
+          when: "count() < 5"
+          message: This application recommends at last 5 nodes.
+      - pass:
+          message: This cluster has enough nodes.
+  - nodeResources:
+      checkName: Every node in the cluster must have at least 4Gi of memory
+      outcomes:
+      - fail:
+          when: "min(memoryCapacity) < 4Gi"
+          message: All nodes must have at least 4 GB of memory.
+      - warn:
+          when: "min(memoryCapacity) < 16Gi"
+          message: All nodes are recommended to have at least 16 GB of memory.
+      - pass:
+          message: All nodes have at least 16 GB of memory.
+  - nodeResources:
+      checkName: Every node in the cluster must have at least 40 GB of ephemeral storage
+      outcomes:
+      - fail:
+          when: "min(ephemeralStorageCapacity) < 40Gi"
+          message: All nodes must have at least 40 GB of ephemeral storage.
+      - warn:
+          when: "min(ephemeralStorageCapacity) < 100Gi"
+          message: All nodes are recommended to have at least 100 GB of ephemeral storage.
+      - pass:
+          message: All nodes have at least 100 GB of ephemeral storage.
+  - nodeResources:
+      checkName: Total CPU Cores in the cluster is 6 or greater
+      outcomes:
+      - fail:
+          when: "sum(cpuCapacity) < 6"
+          message: The cluster must contain at least 6 cores.
+      - warn:
+          when: "sum(cpuCapacity) < 20"
+          message: The cluster is recommended to contain at least 20 cores.
+      - pass:
+          message: There are at sufficient cores in the cluster.
+  - containerRuntime:
+      outcomes:
+      - pass:
+          when: "== docker"
+          message: Docker container runtime was found.
+      - fail:
+          message: Did not find Docker container runtime.
+  - storageClass:
+      checkName: Required storage classes
+      storageClassName: "default"
+      outcomes:
+      - fail:
+          message: Could not find a storage class called default.
+      - pass:
+          message: All good on storage classes.
+  - distribution:
+      outcomes:
+      - pass:
+          when: "== eks"
+          message: EKS is a supported distribution.
+      - pass:
+          when: "== gke"
+          message: GKE is a supported distribution.
+      - pass:
+          when: "== kurl"
+          message: KURL is a supported distribution.
+      - fail:
+          message: Unsupported distribution of Kubernetes.
