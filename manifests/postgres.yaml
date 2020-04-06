@@ -22,6 +22,8 @@ spec:
           value: cd4pe
         - name: POSTGRES_USER
           value: cd4pe
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
         image: postgres:9.6
         name: postgres
         ports:
@@ -35,7 +37,7 @@ spec:
             memory: "2048Mi"
             cpu: "4"
         volumeMounts:
-        - mountPath: /var/lib/postgresql
+        - mountPath: /var/lib/postgresql/data
           name: cd4pe-postgres
       hostname: postgres
       restartPolicy: Always
