@@ -47,9 +47,9 @@ spec:
           name: cache-volume
       hostname: cd4pe
       restartPolicy: Always
-    volumes:
-    - name: cache-volume
-      emptyDir: {}
+      volumes:
+      - name: cache-volume
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
