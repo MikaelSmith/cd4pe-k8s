@@ -42,8 +42,14 @@ spec:
           limits:
             memory: "2048Mi"
             cpu: "2"
+        volumeMounts:
+        - mountPath: /disk
+          name: cache-volume
       hostname: cd4pe
       restartPolicy: Always
+    volumes:
+    - name: cache-volume
+      emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
