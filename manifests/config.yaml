@@ -26,12 +26,12 @@ spec:
       title: PostgreSQL Password
       type: password
       required: true
-      value: '{{repl randAscii 24}}'
+      value: '{{repl RandomString 24}}'
     - name: minio_secret_key
       title: Minio Secret Key
       type: password
       required: true
-      value: '{{repl randAscii 24}}'
+      value: '{{repl RandomString 24}}'
   - name: ingress_setup
     title: Ingress Setup
     description: |
