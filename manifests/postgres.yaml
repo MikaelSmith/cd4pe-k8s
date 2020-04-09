@@ -23,9 +23,6 @@ spec:
   serviceName: postgres
   template:
     metadata:
-      annotations:
-        # Trigger restarting the pod when password changes
-        checksum/changes: repl{{ConfigOption "postgres_checksum"}}
       labels:
         app.kubernetes.io/name: cd4pe-postgres
     spec:

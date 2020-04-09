@@ -24,30 +24,28 @@ spec:
        # Uses Sprig functions to generate a (mostly) random 16-byte key
       value: '{{repl randAscii 16 | b64enc}}'
     - name: postgres_user
+      type: text
       hidden: true
-      readonly: true
       value: cd4pe
     - name: postgres_password
-      title: PostgreSQL Password
       type: password
-      required: true
+      hidden: true
       value: '{{repl RandomString 24}}'
     - name: postgres_checksum
+      type: text
       hidden: true
-      readonly: true
       value: repl{{sha256sum (cat (ConfigOption "postgres_user") ":" (ConfigOption "postgres_password"))}}
     - name: minio_access_key
+      type: text
       hidden: true
-      readonly: true
       value: minio
     - name: minio_secret_key
-      title: Minio Secret Key
       type: password
-      required: true
+      hidden: true
       value: '{{repl RandomString 24}}'
     - name: minio_checksum
+      type: text
       hidden: true
-      readonly: true
       value: repl{{sha256sum (cat (ConfigOption "minio_access_key") ":" (ConfigOption "minio_secret_key"))}}
   - name: ingress_setup
     title: Ingress Setup
