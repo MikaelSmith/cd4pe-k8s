@@ -15,7 +15,7 @@ metadata:
   namespace: '{{repl or (ConfigOption "namespace") Namespace }}'
 type: Opaque
 stringData:
-  accessKey: minio
+  accessKey: '{{repl ConfigOption "minio_access_key"}}'
   secretKey: '{{repl ConfigOption "minio_secret_key"}}'
 ---
 apiVersion: v1
@@ -50,7 +50,7 @@ spec:
     metadata:
       annotations:
         # Trigger restarting the pod when password changes
-        checksum/password: repl{{sha256sum (ConfigOption "minio_secret_key")}}
+        checksum/changes: repl{{ConfigOption "minio_checksum"}}
       labels:
         app: minio # has to match .spec.selector.matchLabels
     spec:

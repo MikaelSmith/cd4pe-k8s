@@ -6,7 +6,7 @@ metadata:
   namespace: '{{repl or (ConfigOption "namespace") Namespace }}'
 type: Opaque
 stringData:
-  user: cd4pe
+  user: '{{repl ConfigOptions "postgres_user"}}'
   password: '{{repl ConfigOption "postgres_password"}}'
 ---
 apiVersion: apps/v1
@@ -25,7 +25,7 @@ spec:
     metadata:
       annotations:
         # Trigger restarting the pod when password changes
-        checksum/password: repl{{sha256sum (ConfigOption "postgres_password")}}
+        checksum/changes: repl{{ConfigOption "postgres_checksum"}}
       labels:
         app.kubernetes.io/name: cd4pe-postgres
     spec:

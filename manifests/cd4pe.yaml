@@ -14,7 +14,7 @@ spec:
     metadata:
       annotations:
         # Trigger restarting the pod when password changes
-        checksum/password: repl{{sha256sum (ConfigOption "postgres_password")}}
+        checksum/changes: repl{{ConfigOption "postgres_checksum"}}
       labels:
         app.kubernetes.io/name: cd4pe
     spec:
