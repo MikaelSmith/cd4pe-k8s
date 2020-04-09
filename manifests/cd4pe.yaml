@@ -20,9 +20,15 @@ spec:
         - name: DB_ENDPOINT
           value: postgres://postgres:5432/cd4pe
         - name: DB_PASS
-          value: cd4pe
+          valueFrom:
+            secretKeyRef:
+              name: cd4pe-postgres
+              key: password
         - name: DB_USER
-          value: cd4pe
+          valueFrom:
+            secretKeyRef:
+              name: cd4pe-postgres
+              key: user
         - name: PFI_SECRET_KEY
           valueFrom:
             secretKeyRef:

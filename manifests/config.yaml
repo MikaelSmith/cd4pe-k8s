@@ -22,6 +22,11 @@ spec:
       required: true
        # Uses Sprig functions to generate a (mostly) random 16-byte key
       value: '{{repl randAscii 16 | b64enc}}'
+    - name: postgres_password
+      title: PostgreSQL Password
+      type: password
+      required: true
+      value: '{{repl randAscii 24}}'
   - name: ingress_setup
     title: Ingress Setup
     description: |

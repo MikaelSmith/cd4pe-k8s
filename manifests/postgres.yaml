@@ -1,4 +1,14 @@
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cd4pe-postgres
+  namespace: '{{repl or (ConfigOption "namespace") Namespace }}'
+type: Opaque
+stringData:
+  user: cd4pe
+  password: '{{repl ConfigOption "postgres_password"}}'
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -19,9 +29,15 @@ spec:
       containers:
       - env:
         - name: POSTGRES_PASSWORD
-          value: cd4pe
+          valueFrom:
+            secretKeyRef:
+              name: cd4pe-postgres
+              key: password
         - name: POSTGRES_USER
-          value: cd4pe
+          valueFrom:
+            secretKeyRef:
+              name: cd4pe-postgres
+              key: user
         - name: PGDATA
           value: /var/lib/postgresql/data/pgdata
         image: postgres:9.6
