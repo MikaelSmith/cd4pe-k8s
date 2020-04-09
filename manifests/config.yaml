@@ -37,7 +37,7 @@ spec:
       type: text
       title: Hostname
       help_text: |
-        Use this field to provide a hostname for your Example Application installation.
+        Use this field to provide a hostname for your CD4PE Application installation.
       required: true
       when: repl{{ ConfigOptionEquals "enable_ingress" "1" }}
     - name: allow_http
