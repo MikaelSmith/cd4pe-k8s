@@ -86,6 +86,6 @@ spec:
           message: GKE is a supported distribution.
       - pass:
           when: "== kurl"
-          message: KURL is a supported distribution.
+          message: kURL is a supported distribution.
       - fail:
           message: Unsupported distribution of Kubernetes.
