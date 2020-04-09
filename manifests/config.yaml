@@ -7,6 +7,12 @@ spec:
   - name: application_setup
     title: Application Setup
     items:
+    - name: namespace
+      title: Kubernetes Namespace
+      help_text: |
+        The namespace to deploy in. The namespace needs to exist before deploying to it. Set blank to deploy to the same namespace as the admin console.
+      type: text
+      value: cd4pe
     - name: pfi_secret_key
       title: PFI Secret Key
       help_text: |
@@ -16,12 +22,6 @@ spec:
       required: true
        # Uses Sprig functions to generate a (mostly) random 16-byte key
       value: '{{repl randAscii 16 | b64enc}}'
-    - name: namespace
-      title: Kubernetes Namespace
-      help_text: |
-        The namespace to deploy in. The namespace needs to exist before deploying to it. Set blank to deploy to the same namespace as the admin console.
-      type: text
-      value: cd4pe
   - name: ingress_setup
     title: Ingress Setup
     description: |
