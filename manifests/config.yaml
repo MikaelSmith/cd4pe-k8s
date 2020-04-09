@@ -14,10 +14,11 @@ spec:
       type: text
       value: cd4pe
     - name: pfi_secret_key
-      title: PFI Secret Key
+      title: Database Encryption Secret Key
       help_text: |
         A 16-byte secret key used for AES encryption of secrets (such as PE access tokens) supplied to Continuous Delivery for PE.
         The default is not cryptographically-generated. Generate a new key by running: `dd bs=1 if=/dev/urandom count=16 2>/dev/null | base64`.
+        Warning: changing this after initial rollout may make data in CD4PE inaccessible.
       type: password
       required: true
        # Uses Sprig functions to generate a (mostly) random 16-byte key
