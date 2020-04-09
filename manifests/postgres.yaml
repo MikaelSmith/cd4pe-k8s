@@ -6,7 +6,7 @@ metadata:
   namespace: '{{repl or (ConfigOption "namespace") Namespace }}'
 type: Opaque
 stringData:
-  user: '{{repl ConfigOptions "postgres_user"}}'
+  user: '{{repl ConfigOption "postgres_user"}}'
   password: '{{repl ConfigOption "postgres_password"}}'
 ---
 apiVersion: apps/v1
