@@ -48,6 +48,9 @@ spec:
       app: minio # has to match .spec.template.metadata.labels
   template:
     metadata:
+      annotations:
+        # Trigger restarting the pod when password changes
+        checksum/password: repl{{sha256sum (ConfigOption "minio_secret_key")}}
       labels:
         app: minio # has to match .spec.selector.matchLabels
     spec:
