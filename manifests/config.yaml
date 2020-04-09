@@ -27,6 +27,11 @@ spec:
       type: password
       required: true
       value: '{{repl randAscii 24}}'
+    - name: minio_secret_key
+      title: Minio Secret Key
+      type: password
+      required: true
+      value: '{{repl randAscii 24}}'
   - name: ingress_setup
     title: Ingress Setup
     description: |
