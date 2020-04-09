@@ -23,6 +23,9 @@ spec:
       required: true
        # Uses Sprig functions to generate a (mostly) random 16-byte key
       value: '{{repl randAscii 16 | b64enc}}'
+    # MinIO/PostgreSQL credentials are here to persist generated values but hidden to prevent changing them.
+    # They should only be changed in the event of a security incident; doing so requires changing values
+    # here (so CD4PE knows how to connect) and issuing commands to minio and postgres to change passwords.
     - name: postgres_user
       type: text
       hidden: true
@@ -43,6 +46,7 @@ spec:
       type: password
       hidden: true
       value: '{{repl RandomString 24}}'
+    # Will be used once we can configure object store credentials as environment variables in CD4PE.
     - name: minio_checksum
       type: text
       hidden: true

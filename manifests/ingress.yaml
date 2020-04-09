@@ -27,7 +27,7 @@ spec:
               serviceName: cd4pe
               servicePort: 8000
 ---
-# Embedded cluster. With KURL, the ingress uses a secret from the admin console namespace for TLS.
+# Embedded cluster. With kURL, the ingress uses a secret from the admin console namespace for TLS.
 # If the application is in a different namespace, follow
 # https://blog.donbowman.ca/2018/09/06/accessing-a-service-in-a-different-namespace-from-a-single-ingress-in-kubernetes
 # to setup a service in the ingress's namespace to reroute to the application namespace.
