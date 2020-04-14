@@ -37,7 +37,7 @@ spec:
             secretKeyRef:
               name: cd4pe-pfi
               key: pfiSecretKey
-        image: puppet/continuous-delivery-for-puppet-enterprise:3.5.0
+        image: puppet/continuous-delivery-for-puppet-enterprise:3.6.0
         name: cd4pe
         ports:
         - name: cd4pe-web
